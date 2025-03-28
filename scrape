@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+
+require_relative '../lib/artwork_scraper'
+
+if ARGV.empty?
+  puts "Usage: ./bin/scrape path/to/your/file.html"
+  exit 1
+end
+
+file_path = ARGV[0]
+
+unless File.exist?(file_path)
+  puts "Error: File '#{file_path}' not found"
+  exit 1
+end
+
+begin
+  html_content = File.read(file_path)
+  scraper = ArtworkScraper.new(html_content)
+  result = scraper.scrape
+
+  puts JSON.pretty_generate(result)
+rescue => e
+  puts "Error: #{e.message}"
+  exit 1
+end
